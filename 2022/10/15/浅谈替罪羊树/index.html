@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ntlazy.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言噫，好！我又来了 这几天闲着没事翻桃片，发现好多人卡评测被封了，就看了看紫荆花，发现 splay 会被卡，就去学了替罪羊树（$\text{Scapegoat Tree}$）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈替罪羊树">
+<meta property="og:url" content="https://ntlazy.github.io/2022/10/15/%E6%B5%85%E8%B0%88%E6%9B%BF%E7%BD%AA%E7%BE%8A%E6%A0%91/index.html">
+<meta property="og:site_name" content="Ntの咖啡馆">
+<meta property="og:description" content="前言噫，好！我又来了 这几天闲着没事翻桃片，发现好多人卡评测被封了，就看了看紫荆花，发现 splay 会被卡，就去学了替罪羊树（$\text{Scapegoat Tree}$）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-15T07:19:35.000Z">
+<meta property="article:modified_time" content="2022-10-15T07:51:12.000Z">
+<meta property="article:author" content="Nt_Yester">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://ntlazy.github.io/2022/10/15/%E6%B5%85%E8%B0%88%E6%9B%BF%E7%BD%AA%E7%BE%8A%E6%A0%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>浅谈替罪羊树 | Ntの咖啡馆</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ntの咖啡馆</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://ntlazy.github.io/2022/10/15/%E6%B5%85%E8%B0%88%E6%9B%BF%E7%BD%AA%E7%BE%8A%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.luogu.com.cn/upload/image_hosting/e641p9sl.png">
+      <meta itemprop="name" content="Nt_Yester">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ntの咖啡馆">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅谈替罪羊树
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-15 15:19:35 / 修改时间：15:51:12" itemprop="dateCreated datePublished" datetime="2022-10-15T15:19:35+08:00">2022-10-15</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="far fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><del>噫，好！我又来了</del></p>
+<p>这几天闲着没事翻桃片，发现好多人卡评测被封了，就看了看紫荆花，发现 splay 会被卡，就去学了替罪羊树（$\text{Scapegoat Tree}$）。</p>
+<span id="more"></span>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>大家都知道，splay 是通过旋转维护整棵树的平衡，但也会出现深度过大而导致复杂度爆炸的情况。</p>
+<p>而替罪羊树则是通过重构来维护平衡，他会初始一个失衡系数 $\alpha$，一般取 $[0.7,0.8]$，然后通过比较左右子树大小和自身大小来判断是否失衡，若失衡，就拍扁重构</p>
+<p>然后是关于删除的一个问题，替罪羊树用的是惰性删除（把当前节点个数清零，但不从树中删去），记住这个东西，对之后的很多东西是都有影响的。</p>
+<h3 id="关于结构体"><a href="#关于结构体" class="headerlink" title="关于结构体"></a>关于结构体</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">	<span class="type">int</span> val,num,ch[<span class="number">2</span>],sizt,sizv,siznd;</span><br><span class="line">&#125;t[<span class="number">2000001</span>];</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，基本上与 splay 没有什么太大区别，但多了，三个 siz 并且没有 fa（因为他不需要遍历父亲）。</p>
+<p>解读一下这三个 siz。</p>
+<ol>
+<li><p><code>sizt</code>：子树中有多少个不同的权值（包括空节点）</p>
+</li>
+<li><p><code>sizv</code>：子树中有多少个节点（不包括空节点）</p>
+</li>
+<li><p><code>siznd</code>：子树中有多少个不同的权值（不包括空节点）</p>
+</li>
+</ol>
+<p>对应的 <code>upd</code> 应该这么写</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">upd</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">	t[x].sizt=t[t[x].ch[<span class="number">0</span>]].sizt+t[t[x].ch[<span class="number">1</span>]].sizt+<span class="number">1</span>;</span><br><span class="line">	t[x].sizv=t[t[x].ch[<span class="number">0</span>]].sizv+t[t[x].ch[<span class="number">1</span>]].sizv+t[x].num;</span><br><span class="line">	t[x].siznd=t[t[x].ch[<span class="number">0</span>]].siznd+t[t[x].ch[<span class="number">1</span>]].siznd+(t[x].num&gt;=<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="关于重构"><a href="#关于重构" class="headerlink" title="关于重构"></a>关于重构</h3><p>就是把一棵树展开进一个线性表中，再二分建树（空节点不建树），比较简单，直接上代码了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">rbuflatten</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!x) <span class="keyword">return</span>;</span><br><span class="line">	<span class="built_in">rbuflatten</span>(t[x].ch[<span class="number">0</span>]);</span><br><span class="line">	<span class="keyword">if</span> (t[x].num) lur[++luc]=x;</span><br><span class="line">	<span class="built_in">rbuflatten</span>(t[x].ch[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">rbubuild</span><span class="params">(<span class="type">int</span> l,<span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (l==r) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> mid=(l+r&gt;&gt;<span class="number">1</span>);</span><br><span class="line">	t[lur[mid]].ch[<span class="number">0</span>]=<span class="built_in">rbubuild</span>(l,mid);</span><br><span class="line">	t[lur[mid]].ch[<span class="number">1</span>]=<span class="built_in">rbubuild</span>(mid+<span class="number">1</span>,r);</span><br><span class="line">	<span class="built_in">upd</span>(lur[mid]);</span><br><span class="line">	<span class="keyword">return</span> lur[mid];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">rbu</span><span class="params">(<span class="type">int</span> &amp;x)</span> </span>&#123; luc=<span class="number">0</span>,<span class="built_in">rbuflatten</span>(x),x=<span class="built_in">rbubuild</span>(<span class="number">1</span>,luc+<span class="number">1</span>); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断是否重构有三个条件</p>
+<ol>
+<li><p>本节点是否为空</p>
+</li>
+<li><p>自己的 <code>sizt</code> 乘上 $\alpha$ 是否小于左右子树中最大的子树的 <code>sizt</code></p>
+</li>
+<li><p>自己的 <code>sizt</code> 乘上 $\alpha$ 是否大于自己的 <code>siznd</code></p>
+</li>
+</ol>
+<p>关于第三条，因为惰性删除，删除操作一旦过多，会导致树中的空节点过多，显而易见，空节点多没有用，所以，可通过重构操作删去。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ifrbu</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123; <span class="keyword">return</span> (t[x].num <span class="built_in">and</span> ((t[x].sizt*A&lt;=(<span class="type">double</span>)std::<span class="built_in">max</span>(t[t[x].ch[<span class="number">0</span>]].sizt,t[t[x].ch[<span class="number">1</span>]].sizt)) <span class="built_in">or</span> (t[x].sizt*A&gt;=(<span class="type">double</span>)t[x].siznd))); &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询排名"><a href="#查询排名" class="headerlink" title="查询排名"></a>查询排名</h3><p>替罪羊树有两个函数，一个为 <code>rkf</code>，是查询比 $k$ 小的数中最大数的排名，一个是 <code>rkl</code>，是查询比 $k$ 大的数中最小数的排名。</p>
+<p>两个函数写法基本相同，$k$ 比本节点大往右子树搜，比本节点小往左子树搜。</p>
+<p>但是！替罪羊树采用惰性删除，所以显而易见的，当 $k$ 等于本节点时如果 <code>num</code> 不等于 $0$ 是可以返回的，但如果等于 $0$ 呢？</p>
+<p>两个函数有两个不同的写法。</p>
+<p>对于 <code>rkf</code> 因为他是要找比 $k$ 小的数中的最大数的排名，所以他的返回值为本节点的左子树的 <code>sizv</code>，那如果 $k$ 所代表的节点的 <code>num</code> 为 $0$，那么他的左子树的 <code>sizv</code>，就等于比 $k$ 大的数中的最小数所代表节点的左子树的 <code>sizv</code>，所以应该往右子树搜。</p>
+<p>对于 <code>rkl</code> 因为他是要找比 $k$ 大的数中的最小数的排名，所以他的返回值应为本节点的左子树的 <code>sizv</code> 加上自己的 <code>num</code> 再加 $1$，那如果 $k$ 所代表的节点的 <code>num</code> 为 $0$，那么他的左子树大小，就等于比他小的数中最大数所代表节点的左子树的 <code>sizv</code> 加上自己的 <code>num</code>，所以要往左子树搜。</p>
+<p>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">rkf</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!x) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (t[x].val==k <span class="keyword">and</span> t[x].num) <span class="keyword">return</span> t[t[x].ch[<span class="number">0</span>]].sizv;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (k&lt;t[x].val) <span class="keyword">return</span> <span class="built_in">rkf</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">rkf</span>(t[x].ch[<span class="number">1</span>],k)+t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">rkl</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!x) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (t[x].val==k <span class="keyword">and</span> t[x].num) <span class="keyword">return</span> t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num+<span class="number">1</span>;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (k&gt;t[x].val) <span class="keyword">return</span> <span class="built_in">rkl</span>(t[x].ch[<span class="number">1</span>],k)+t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">rkl</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询排名为-k-的权值"><a href="#查询排名为-k-的权值" class="headerlink" title="查询排名为 $k$ 的权值"></a>查询排名为 $k$ 的权值</h3><p>没什么好说的，查看 $k$ 是否在 $(sizv_{\text{左子树}},sizv_{\text{左子树}}+num_{\text{本节点}}]$ 即可，如果小往左子树搜，大则往右子树搜。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">kth</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!x) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (t[t[x].ch[<span class="number">0</span>]].sizv&lt;k <span class="keyword">and</span> k&lt;=t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num) <span class="keyword">return</span> t[x].val;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (t[t[x].ch[<span class="number">0</span>]].sizv&gt;=k) <span class="keyword">return</span> <span class="built_in">kth</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">kth</span>(t[x].ch[<span class="number">1</span>],k-t[t[x].ch[<span class="number">0</span>]].sizv-t[x].num);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="前驱以及后继"><a href="#前驱以及后继" class="headerlink" title="前驱以及后继"></a>前驱以及后继</h3><p>结合一下上面的三个函数即可。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">pre</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">kth</span>(rt,<span class="built_in">rkf</span>(rt,x)); &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">nxt</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">kth</span>(rt,<span class="built_in">rkl</span>(rt,x)); &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p>比较简单，递归插入即可，不多说了。</p>
+<p>回溯时记得重构。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ins</span><span class="params">(<span class="type">int</span> &amp;x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!x) &#123;</span><br><span class="line">		t[x=++cnt].val=k,t[x].num++;</span><br><span class="line">		<span class="built_in">upd</span>(x);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (k==t[x].val) t[x].num++;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (k&gt;t[x].val) <span class="built_in">ins</span>(t[x].ch[<span class="number">1</span>],k);</span><br><span class="line">		<span class="keyword">else</span> <span class="built_in">ins</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">		<span class="built_in">upd</span>(x);</span><br><span class="line">		<span class="keyword">if</span> (ifrbu(x)) <span class="built_in">rbu</span>(x);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>同上</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">del</span><span class="params">(<span class="type">int</span> &amp;x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!x) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">if</span> (k==t[x].val) t[x].num--;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (k&gt;t[x].val) <span class="built_in">del</span>(t[x].ch[<span class="number">1</span>],k);</span><br><span class="line">	<span class="keyword">else</span> <span class="built_in">del</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">	<span class="built_in">upd</span>(x);</span><br><span class="line">	<span class="keyword">if</span> (ifrbu(x)) <span class="built_in">rbu</span>(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><p>以后没准会更新，但 $99.9%$ 会咕。</p>
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3369">【模板】普通平衡树</a></p>
+<p>板子。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> Scapegoat_tree &#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">double</span> A=<span class="number">0.75</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">        <span class="type">int</span> val,ch[<span class="number">2</span>],num,sizt,sizv,siznd;</span><br><span class="line">    &#125;t[<span class="number">100001</span>];</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> cnt,rt,ldc,ldr[<span class="number">100001</span>];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">upd</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        t[x].sizt=t[t[x].ch[<span class="number">0</span>]].sizt+t[t[x].ch[<span class="number">1</span>]].sizt+<span class="number">1</span>;</span><br><span class="line">        t[x].sizv=t[t[x].ch[<span class="number">0</span>]].sizv+t[t[x].ch[<span class="number">1</span>]].sizv+t[x].num;</span><br><span class="line">        t[x].siznd=t[t[x].ch[<span class="number">0</span>]].siznd+t[t[x].ch[<span class="number">1</span>]].siznd+(t[x].num&gt;=<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">ifrbu</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123; <span class="keyword">return</span> (t[x].num <span class="built_in">and</span> ((t[x].sizt*A&lt;=(<span class="type">double</span>)std::<span class="built_in">max</span>(t[t[x].ch[<span class="number">0</span>]].sizt,t[t[x].ch[<span class="number">1</span>]].sizt)) <span class="built_in">or</span> (t[x].sizt*A&gt;=(<span class="type">double</span>)t[x].siznd))); &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rbuflatten</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!x) <span class="keyword">return</span>;</span><br><span class="line">        <span class="built_in">rbuflatten</span>(t[x].ch[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> (t[x].num) ldr[++ldc]=x;</span><br><span class="line">        <span class="built_in">rbuflatten</span>(t[x].ch[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rbubuild</span><span class="params">(<span class="type">int</span> l,<span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l&gt;=r) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> mid=(l+r&gt;&gt;<span class="number">1</span>);</span><br><span class="line">        t[ldr[mid]].ch[<span class="number">0</span>]=<span class="built_in">rbubuild</span>(l,mid);</span><br><span class="line">        t[ldr[mid]].ch[<span class="number">1</span>]=<span class="built_in">rbubuild</span>(mid+<span class="number">1</span>,r);</span><br><span class="line">        <span class="built_in">upd</span>(ldr[mid]);</span><br><span class="line">        <span class="keyword">return</span> ldr[mid];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rbu</span><span class="params">(<span class="type">int</span> &amp;x)</span> </span>&#123;</span><br><span class="line">        ldc=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">rbuflatten</span>(x);</span><br><span class="line">        x=<span class="built_in">rbubuild</span>(<span class="number">1</span>,ldc+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ins</span><span class="params">(<span class="type">int</span> &amp;x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!x) &#123;</span><br><span class="line">            t[x=++cnt].val=k,t[x].num++;</span><br><span class="line">            <span class="built_in">upd</span>(x);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (k==t[x].val) t[x].num++;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (k&gt;t[x].val) <span class="built_in">ins</span>(t[x].ch[<span class="number">1</span>],k);</span><br><span class="line">            <span class="keyword">else</span> <span class="built_in">ins</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">            <span class="built_in">upd</span>(x);</span><br><span class="line">            <span class="keyword">if</span> (ifrbu(x)) <span class="built_in">rbu</span>(x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">del</span><span class="params">(<span class="type">int</span> &amp;x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!x) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span> (t[x].val==k) t[x].num--;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (k&gt;t[x].val) <span class="built_in">del</span>(t[x].ch[<span class="number">1</span>],k);</span><br><span class="line">        <span class="keyword">else</span> <span class="built_in">del</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">        <span class="built_in">upd</span>(x);</span><br><span class="line">        <span class="keyword">if</span> (ifrbu(x)) <span class="built_in">rbu</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rkf</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!x) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (t[x].num <span class="keyword">and</span> t[x].val==k) <span class="keyword">return</span> t[t[x].ch[<span class="number">0</span>]].sizv;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (t[x].val&gt;k) <span class="keyword">return</span> <span class="built_in">rkf</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (t[x].val&lt;=k) <span class="keyword">return</span> t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num+<span class="built_in">rkf</span>(t[x].ch[<span class="number">1</span>],k); </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">rkl</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!x) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (t[x].num <span class="keyword">and</span> t[x].val==k) <span class="keyword">return</span> t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num+<span class="number">1</span>;<span class="keyword">else</span> <span class="keyword">if</span> (t[x].val&lt;k) <span class="keyword">return</span> t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num+<span class="built_in">rkl</span>(t[x].ch[<span class="number">1</span>],k);</span><br><span class="line">            <span class="keyword">else</span><span class="comment">/* if (t[x].val&gt;k) */</span><span class="keyword">return</span> <span class="built_in">rkl</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">             </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">kth</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!x) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="comment">/*t[x].num and */</span>t[t[x].ch[<span class="number">0</span>]].sizv&lt;k <span class="keyword">and</span> k&lt;=t[t[x].ch[<span class="number">0</span>]].sizv+t[x].num) <span class="keyword">return</span> t[x].val;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (t[t[x].ch[<span class="number">0</span>]].sizv&gt;=k) <span class="keyword">return</span> <span class="built_in">kth</span>(t[x].ch[<span class="number">0</span>],k);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">return</span> <span class="built_in">kth</span>(t[x].ch[<span class="number">1</span>],k-t[t[x].ch[<span class="number">0</span>]].sizv-t[x].num);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">pre</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> ra=<span class="built_in">rkf</span>(rt,x);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">kth</span>(rt,ra);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">nxt</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> ra=<span class="built_in">rkl</span>(rt,x);</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">kth</span>(rt,ra);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Scapegoat_tree;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!x) <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">work</span>(t[x].ch[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">if</span> (t[x].num) <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,t[x].val);</span><br><span class="line">    <span class="built_in">work</span>(t[x].ch[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>,opt,x;i&lt;=n;i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>,&amp;opt,&amp;x);</span><br><span class="line">        <span class="keyword">if</span> (opt==<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="built_in">ins</span>(rt,x);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (opt==<span class="number">2</span>) &#123;</span><br><span class="line">            <span class="built_in">del</span>(rt,x);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (opt==<span class="number">3</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,<span class="built_in">rkf</span>(rt,x)+<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (opt==<span class="number">4</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,<span class="built_in">kth</span>(rt,x));</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (opt==<span class="number">5</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,<span class="built_in">pre</span>(x));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,<span class="built_in">nxt</span>(x));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P6136">【模板】普通平衡树（数据加强版）</a></p>
+<p>依旧是板子（代码就不放了），记得特判第一次 $3,4,5,6$ 的操作。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/15/%E6%B5%85%E8%B0%88Splay/" rel="prev" title="浅谈Splay">
+      <i class="fa fa-chevron-left"></i> 浅谈Splay
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/15/%E6%B5%85%E8%B0%88%E4%BD%BF%E7%94%A8SGT%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E7%BC%80%E5%B9%B3%E8%A1%A1%E6%A0%91/" rel="next" title="浅谈使用SGT实现的后缀平衡树">
+      浅谈使用SGT实现的后缀平衡树 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">2.1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">2.2.</span> <span class="nav-text">关于结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E9%87%8D%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">关于重构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%8E%92%E5%90%8D"><span class="nav-number">2.4.</span> <span class="nav-text">查询排名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%8E%92%E5%90%8D%E4%B8%BA-k-%E7%9A%84%E6%9D%83%E5%80%BC"><span class="nav-number">2.5.</span> <span class="nav-text">查询排名为 $k$ 的权值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E9%A9%B1%E4%BB%A5%E5%8F%8A%E5%90%8E%E7%BB%A7"><span class="nav-number">2.6.</span> <span class="nav-text">前驱以及后继</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5"><span class="nav-number">2.7.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">2.8.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">例题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Nt_Yester"
+      src="https://cdn.luogu.com.cn/upload/image_hosting/e641p9sl.png">
+  <p class="site-author-name" itemprop="name">Nt_Yester</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Nt_Yester</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
