@@ -921,11 +921,11 @@ pre .javascript .function {
 }
 .main-inner {
   margin: 0 auto;
-  width: calc(100% - 20px);
+  width: 500px;
 }
 @media (min-width: 1200px) {
   .main-inner {
-    width: 1160px;
+    width: 500px;
   }
 }
 @media (min-width: 1600px) {
@@ -943,11 +943,11 @@ pre .javascript .function {
 }
 .header-inner {
   margin: 0 auto;
-  width: calc(100% - 20px);
+  width: 500px;
 }
 @media (min-width: 1200px) {
   .header-inner {
-    width: 1160px;
+    width: 500px;
   }
 }
 @media (min-width: 1600px) {
@@ -1175,7 +1175,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #79ff0d;
+  background: #ff2fdb;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1389,11 +1389,11 @@ pre .javascript .function {
   box-sizing: border-box;
   margin: 0 auto;
   text-align: center;
-  width: calc(100% - 20px);
+  width: 500px;
 }
 @media (min-width: 1200px) {
   .footer-inner {
-    width: 1160px;
+    width: 500px;
   }
 }
 @media (min-width: 1600px) {
@@ -2158,11 +2158,11 @@ mjx-container + br {
 .header {
   margin: 0 auto;
   position: relative;
-  width: calc(100% - 20px);
+  width: 500px;
 }
 @media (min-width: 1200px) {
   .header {
-    width: 1160px;
+    width: 500px;
   }
 }
 @media (min-width: 1600px) {
@@ -2183,11 +2183,11 @@ mjx-container + br {
   padding: 0;
   position: absolute;
   top: 0;
-  width: 240px;
+  width: 250px;
 }
 @media (min-width: 1200px) {
   .header-inner {
-    width: 240px;
+    width: 250px;
   }
 }
 @media (max-width: 991px) {
@@ -2214,7 +2214,7 @@ mjx-container + br {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.12);
   box-sizing: border-box;
   padding: 40px;
-  width: calc(100% - 252px);
+  width: calc(100% - 262px);
 }
 @media (max-width: 991px) {
   .content-wrap {
@@ -2356,7 +2356,7 @@ mjx-container + br {
   box-shadow: none;
   margin-top: 100%;
   position: static;
-  width: 240px;
+  width: 250px;
 }
 @media (max-width: 991px) {
   .sidebar {
@@ -2372,7 +2372,7 @@ mjx-container + br {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.12), 0 -1px 0.5px 0 rgba(0,0,0,0.09);
   box-sizing: border-box;
   color: var(--text-color);
-  width: 240px;
+  width: 250px;
   opacity: 0;
 }
 .sidebar-inner.affix {
