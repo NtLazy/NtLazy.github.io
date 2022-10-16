@@ -304,6 +304,7 @@
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -535,6 +536,26 @@
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '70d627738bbec201e5cb',
+      clientSecret: '853e4722b3074a72716af5ac269e2cc436b2bd72',
+      repo        : 'ntlazy.github.io',
+      owner       : 'NtLazy',
+      admin       : ['NtLazy'],
+      id          : '3771ea42b5a92591bc2892cd7f1b5222',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
