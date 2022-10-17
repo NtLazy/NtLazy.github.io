@@ -180,7 +180,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-10-17 17:03:13 / 修改时间：17:04:50" itemprop="dateCreated datePublished" datetime="2022-10-17T17:03:13+08:00">2022-10-17</time>
+              <time title="创建时间：2022-10-17 17:03:13 / 修改时间：17:06:58" itemprop="dateCreated datePublished" datetime="2022-10-17T17:03:13+08:00">2022-10-17</time>
             </span>
 
           
@@ -197,52 +197,14 @@
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>开坑了，开坑了</p>
 <p>所谓网络流 24 题就是指 24 种经典的网络流建图模型。</p>
 <p>本文内容顺序按照本人 A 题顺序排列。</p>
-<h2 id="试题库问题"><a href="#试题库问题" class="headerlink" title="试题库问题"></a>试题库问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2763">传送门</a></p>
-<h3 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h3><p>有 $n$ 道题和 $k$ 种类型，对于每道题，它匹配 $p_i$ 种类型，对于每种类型需要 $q_i$ 道题，现给出数据，求是否存在可行的情况满足每种类型的需求。</p>
-<h3 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h3><p>很明显了，对于每道题，将他和它所对应的每个类型建边，边权为 $1$，在与源点建边，边权为 <code>INF</code> ，在对于每个种类，将其与汇点建边，边权为 $q_i$。</p>
-<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/tkc5bbv8">link</a></p>
-<h2 id="方格取数问题"><a href="#方格取数问题" class="headerlink" title="方格取数问题"></a>方格取数问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2774">传送门</a></p>
-<h3 id="题意-1"><a href="#题意-1" class="headerlink" title="题意"></a>题意</h3><p>有一个 $n$ 行，$m$ 列的矩阵，每个位置有一个权值 $a_{i,j}$，现在从这些数中挑选出一些，且不能同时挑选与自己有边相邻的权值，问怎样挑选结果最大。</p>
-<h3 id="做法-1"><a href="#做法-1" class="headerlink" title="做法"></a>做法</h3><p>首先需要知道 $\text{最大和} = \text{总和} - \text{最小舍弃}$，而 $\text{最小舍弃} = \text{最小割} = \text{最大流}$。</p>
-<p>然后是建图问题，对于第 $i$ 行，第 $j$ 列的点，如果 $i+j \equiv 1 \pmod 2$ 就连到源点，反之连到汇点，边权为 $a_{i,j}$，再将其与四周的点相连，边权为 <code>INF</code>，然后跑网络流就行了。</p>
-<h3 id="Code-1"><a href="#Code-1" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/8vyznyc9">link</a></p>
-<h2 id="飞行员配对方案问题"><a href="#飞行员配对方案问题" class="headerlink" title="飞行员配对方案问题"></a>飞行员配对方案问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2756">传送门</a></p>
-<h3 id="题意-2"><a href="#题意-2" class="headerlink" title="题意"></a>题意</h3><p>有 $m$ 个外籍飞行员，$n-m$ 个英籍飞行员，有多组 $u$ 和 $v$，表示第 $u$ 位外籍飞行员能和第 $v$ 位英籍飞行员相互配合，询问最大匹配（同籍飞行员之间不可相互配合）。</p>
-<h3 id="做法-2"><a href="#做法-2" class="headerlink" title="做法"></a>做法</h3><p>就是二分图最大匹配，没什么好说的，输出的时候判断一下，该边编号异或 $1$ 的边的边权是否大于零即可。</p>
-<h3 id="Code-2"><a href="#Code-2" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/e4y0dwao">link</a></p>
-<h2 id="圆桌问题"><a href="#圆桌问题" class="headerlink" title="圆桌问题"></a>圆桌问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3254">传送门</a></p>
-<h3 id="题意-3"><a href="#题意-3" class="headerlink" title="题意"></a>题意</h3><p>有 $m$ 组个人，$n$ 张桌子，第 $i$ 组人有 $r_i$ 个人，第 $i$ 张桌子能坐 $c_i$ 个人，且同一组人不能坐一张桌子，询问这些桌子能不能坐的开，若可以，则输出一种方案。</p>
-<h3 id="做法-3"><a href="#做法-3" class="headerlink" title="做法"></a>做法</h3><p>经典二分图求最大匹配。</p>
-<p>首先，将每一组人和每一张桌子建点，再将源点与每一组人建边，边权为 $r_i$，将每一张桌子与汇点建边，边权为 $c_i$，再将每一组人与每一张桌子建边，边权为 $1$，再跑最大匹配即可。</p>
-<h3 id="Code-3"><a href="#Code-3" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/9jmwemdk">link</a></p>
-<h2 id="最小路径覆盖问题"><a href="#最小路径覆盖问题" class="headerlink" title="最小路径覆盖问题"></a>最小路径覆盖问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2764">传送门</a></p>
-<h3 id="题意-4"><a href="#题意-4" class="headerlink" title="题意"></a>题意</h3><p>给你一张有向图 $G(V,E)$，求最小路径覆盖</p>
-<h3 id="做法-4"><a href="#做法-4" class="headerlink" title="做法"></a>做法</h3><p>最小路径覆盖就是求最少的几条路径使得经过所有的点。</p>
-<p>考虑合并，最大路路径覆盖是 $n$ 肯定没错，那最小呢，我们考虑合并一些点，是不是很熟悉了，二分图最大匹配，求出来即可。</p>
-<h3 id="Code-4"><a href="#Code-4" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/l7d7wz70">link</a></p>
-<h2 id="运输问题"><a href="#运输问题" class="headerlink" title="运输问题"></a>运输问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4015">传送门</a></p>
-<h3 id="题意-5"><a href="#题意-5" class="headerlink" title="题意"></a>题意</h3><p>有 $n$ 个仓库和 $m$ 个商店，每个仓库里有 $a<em>i$ 件货物，每个商店需要 $b_i$ 件货物，从第 $i$ 个仓库往第 $j$ 个商店运每单位货物需要花费 $c</em>{i,j}$，问最小花费。</p>
-<p>保证 $\sum\limits<em>{i=1}^n a_i=\sum\limits</em>{j=1}^m b_j$。</p>
-<h3 id="做法-5"><a href="#做法-5" class="headerlink" title="做法"></a>做法</h3><p>一眼费用流，考虑建二分图。</p>
-<p>首先对于每个商店，将其连到汇点，流量设为 $b<em>i$，费用为 $0$，对于每个仓库，将源点连向它，流量设为 $a_i$，费用为 $0$，然后对于每对 $i,j(1 \leq i \leq n,1 \leq j \leq m)$ 连一条边，流量 $INF$，费用 $c</em>{i,j}$。</p>
-<p>然后跑费用流。</p>
-<h3 id="Code-5"><a href="#Code-5" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/rkb2rb4k">link</a></p>
-<h2 id="负载平衡问题"><a href="#负载平衡问题" class="headerlink" title="负载平衡问题"></a>负载平衡问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4016">传送门</a></p>
-<h3 id="题意-6"><a href="#题意-6" class="headerlink" title="题意"></a>题意</h3><p>有 $m$ 个仓库，每个仓库有库存不等，求让每个仓库库存相等所需搬运的值（每个仓库只能往相邻的仓库搬东西）。</p>
-<h3 id="做法-6"><a href="#做法-6" class="headerlink" title="做法"></a>做法</h3><p>很明显对于每个仓库我们将其与相邻两个仓库建边，流量为 $INF$，费用为 $1$（记得特判 $1$ 和 $n$）。</p>
-<p>现在的主要问题是哪些点连远点，哪些点连汇点。</p>
-<p>我们可以这么想，对于一个点，如果它的库存大于平均库存，就把他连到原点，流量为 $\text{库存}-\text{平均库存}$，如果它的库存小于平均库存，就连到汇点，流量为 $\text{平均库存}-\text{库存}$。</p>
-<p>跑费用流即可。</p>
-<h3 id="Code-6"><a href="#Code-6" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/0r1swik5">link</a></p>
-<h2 id="分配问题"><a href="#分配问题" class="headerlink" title="分配问题"></a>分配问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4014">传送门</a></p>
-<h3 id="题意-7"><a href="#题意-7" class="headerlink" title="题意"></a>题意</h3><p>有 $n$ 个人和 $n$ 件工作，第 $i$ 个人做第 $j$ 件工作的效益为 $c_{i,j}$，问你最大效益和最小效益。</p>
-<h3 id="做法-7"><a href="#做法-7" class="headerlink" title="做法"></a>做法</h3><p>明显二分图最大匹配，对于第 $i$ 个人将其与每件工作建边，边权为 $c_{i,j}$，然后，再对于每个人将其与源点建边，边权为 $INF$，对于每件工作，将其与汇点建边，边权为 $INF$，跑最大流即可。</p>
-<h3 id="Code-7"><a href="#Code-7" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/paste/jrincw5g">link</a></p>
-<h2 id="骑士共存问题"><a href="#骑士共存问题" class="headerlink" title="骑士共存问题"></a>骑士共存问题</h2><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3355">传送门</a></p>
-<h3 id="题意-8"><a href="#题意-8" class="headerlink" title="题意"></a>题意</h3><p>有 $n^2$ 匹马（每匹马的走法参照象棋）和 $m$ 个障碍，问如何摆放使得场上的马最多且不能相互攻击。</p>
-<h3 id="做法-8"><a href="#做法-8" class="headerlink" title="做法"></a>做法</h3><p>可以参照<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P2774">方格取数问题</a>，不再过多说明。</p>
-<h3 id="Code-8"><a href="#Code-8" class="headerlink" title="Code"></a>Code</h3><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3355">link</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/10/17/%E7%BD%91%E7%BB%9C%E6%B5%8124%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -284,10 +246,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-10-15 15:20:07 / 修改时间：16:56:04" itemprop="dateCreated datePublished" datetime="2022-10-15T15:20:07+08:00">2022-10-15</time>
+              <time title="创建时间：2022-10-15 15:20:07" itemprop="dateCreated datePublished" datetime="2022-10-15T15:20:07+08:00">2022-10-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-17 17:07:16" itemprop="dateModified" datetime="2022-10-17T17:07:16+08:00">2022-10-17</time>
+              </span>
 
           
 
@@ -300,7 +268,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>$ $</p>
+          <h2 id="1-0写在前面"><a href="#1-0写在前面" class="headerlink" title="1.0写在前面"></a>1.0写在前面</h2><p>原题目为：浅谈后缀平衡树以及关于后缀平衡树非惰性删除操作正确性的思考和惰性删除操作的实现。</p>
+<p><img src="https://cdn.luogu.com.cn/upload/image_hosting/pgfdt2j5.png"></p>
+<p>本文的主题是我对于后缀平衡树非惰性删除操作正确性的思考（就是上面那段话）。</p>
+<p>感谢 <a target="_blank" rel="noopener" href="https://www.luogu.com.cn/user/448942">jd</a> 的图片。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/10/15/%E6%B5%85%E8%B0%88%E4%BD%BF%E7%94%A8SGT%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%8E%E7%BC%80%E5%B9%B3%E8%A1%A1%E6%A0%91/#more" rel="contents">
@@ -350,10 +321,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-10-15 15:19:35 / 修改时间：16:56:04" itemprop="dateCreated datePublished" datetime="2022-10-15T15:19:35+08:00">2022-10-15</time>
+              <time title="创建时间：2022-10-15 15:19:35" itemprop="dateCreated datePublished" datetime="2022-10-15T15:19:35+08:00">2022-10-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-17 17:07:28" itemprop="dateModified" datetime="2022-10-17T17:07:28+08:00">2022-10-17</time>
+              </span>
 
           
 
@@ -366,7 +343,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>$ $</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><del>噫，好！我又来了</del></p>
+<p>这几天闲着没事翻桃片，发现好多人卡评测被封了，就看了看紫荆花，发现 splay 会被卡，就去学了替罪羊树（$\text{Scapegoat Tree}$）。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/10/15/%E6%B5%85%E8%B0%88%E6%9B%BF%E7%BD%AA%E7%BE%8A%E6%A0%91/#more" rel="contents">
@@ -416,10 +394,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-10-15 11:33:18 / 修改时间：16:56:04" itemprop="dateCreated datePublished" datetime="2022-10-15T11:33:18+08:00">2022-10-15</time>
+              <time title="创建时间：2022-10-15 11:33:18" itemprop="dateCreated datePublished" datetime="2022-10-15T11:33:18+08:00">2022-10-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-17 17:07:38" itemprop="dateModified" datetime="2022-10-17T17:07:38+08:00">2022-10-17</time>
+              </span>
 
           
 
@@ -432,7 +416,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>$ $</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>想了想还是写吧。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/10/15/%E6%B5%85%E8%B0%88Splay/#more" rel="contents">
